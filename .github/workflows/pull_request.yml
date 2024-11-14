@@ -13,7 +13,7 @@ jobs:
       fmtOutcome: ${{ steps.fmt.outcome }}
       initOutcome: ${{ steps.init.outcome }}
       validateOutcome: ${{ steps.validate.outcome}}
-      validateOutput: ${{ steps.validate.outcome.stdout}}
+      validateOutput: ${{ steps.validate.outputs.stdout}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
       fmtOutcome: ${{ steps.fmt.outcome }}
       initOutcome: ${{ steps.init.outcome }}
       validateOutcome: ${{ steps.validate.outcome}}
-      validateOutput: ${{ steps.validate.outcome.stdout}}
+      validateOutput: ${{ steps.validate.outputs.stdout}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

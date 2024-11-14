@@ -107,7 +107,7 @@ jobs:
             <details><summary>Validation Output</summary>
 
             \`\`\`\n
-            ${{ MODULE_VALIDATE_OUTPUT }}
+            $MODULE_VALIDATE_OUTPUT
             \`\`\`
 
             </details>

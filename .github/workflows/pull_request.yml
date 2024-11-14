@@ -39,7 +39,7 @@ jobs:
     name: "Validate OIDC Provider submodule"
     defaults:
       run:
-        working-directory: examples/github-actions
+        working-directory: modules/oidc-provider
     runs-on: ubuntu-latest
     outputs:
       fmtOutcome: ${{ steps.fmt.outcome }}

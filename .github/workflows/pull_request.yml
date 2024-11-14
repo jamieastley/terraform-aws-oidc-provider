@@ -95,12 +95,15 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
             })
+            const title = 'Terraform Results'
             const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+              return comment.user.type === 'Bot' && comment.body.includes(title)
             })
 
             // 2. Prepare format of the comment
-            const output = `### Module
+            const output = `## ${title}
+            
+            ### Module
             #### Terraform fmt 🖌\`${{ env.MODULE_FMT }}\`
             #### Terraform init ⚙️\`${{ env.MODULE_INIT }}\`
             #### Terraform validate 🤖\`${{ env.MODULE_VALIDATE }}\`

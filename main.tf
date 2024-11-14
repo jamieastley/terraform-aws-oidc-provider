@@ -1,6 +1,6 @@
 data "aws_iam_policy_document" "oidc_policy" {
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
       type        = "Federated"

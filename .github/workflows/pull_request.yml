@@ -101,25 +101,25 @@ jobs:
 
             // 2. Prepare format of the comment
             const output = `### Module
-            #### Terraform Format and Style 🖌\`${{ env.MODULE_FMT }}\`
-            #### Terraform Initialization ⚙️\`$MODULE_INIT\`
-            #### Terraform Validation 🤖\`$MODULE_VALIDATE\`
+            #### Terraform fmt 🖌\`${{ env.MODULE_FMT }}\`
+            #### Terraform init ⚙️\`${{ env.MODULE_INIT }}\`
+            #### Terraform validate 🤖\`${{ env.MODULE_VALIDATE }}\`
             <details><summary>Validation Output</summary>
 
             \`\`\`\n
-            $MODULE_VALIDATE_OUTPUT
+            ${{ env.MODULE_VALIDATE_OUTPUT }}
             \`\`\`
 
             </details>
             
             ### Example - GitHub Actions 
-            #### Terraform Format and Style 🖌\`$EXAMPLE_FMT\`
-            #### Terraform Initialization ⚙️\`$EXAMPLE_INIT\`
-            #### Terraform Validation 🤖\`$EXAMPLE_VALIDATE\`
+            #### Terraform fmt 🖌\`${{ env.EXAMPLE_FMT }}\`
+            #### Terraform init ⚙️\`${{ env.EXAMPLE_INIT }}\`
+            #### Terraform validate 🤖\`${{ env.EXAMPLE_VALIDATE }}\`
             <details><summary>Validation Output</summary>
 
             \`\`\`\n
-            $EXAMPLE_VALIDATE_OUTPUT
+            ${{ env.EXAMPLE_VALIDATE_OUTPUT }}
             \`\`\`
 
             </details>

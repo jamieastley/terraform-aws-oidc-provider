@@ -35,6 +35,38 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
+  validate_oidc_provider:
+    name: "Validate OIDC Provider module"
+    defaults:
+      run:
+        working-directory: examples/github-actions
+    runs-on: ubuntu-latest
+    outputs:
+      fmtOutcome: ${{ steps.fmt.outcome }}
+      initOutcome: ${{ steps.init.outcome }}
+      validateOutcome: ${{ steps.validate.outcome}}
+      validateOutput: ${{ steps.validate.outputs.stdout}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ vars.TERRAFORM_VERSION }}
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
   validate_gh_actions_example:
     name: "Validate GitHub Actions example"
     defaults:
@@ -82,6 +114,10 @@ jobs:
           MODULE_INIT: ${{ needs.validate_main_module.outputs.initOutcome }}
           MODULE_VALIDATE: ${{ needs.validate_main_module.outputs.validateOutcome }}
           MODULE_VALIDATE_OUTPUT: ${{ needs.validate_main_module.outputs.validateOutput }}
+          OIDC_FMT: ${{ needs.validate_oidc_provider.outputs.fmtOutcome }}
+          OIDC_INIT: ${{ needs.validate_oidc_provider.outputs.initOutcome }}
+          OIDC_VALIDATE: ${{ needs.validate_oidc_provider.outputs.validateOutcome }}
+          OIDC_VALIDATE_OUTPUT: ${{ needs.validate_oidc_provider.outputs.validateOutput }}
           EXAMPLE_FMT: ${{ needs.validate_gh_actions_example.outputs.fmtOutcome }}
           EXAMPLE_INIT: ${{ needs.validate_gh_actions_example.outputs.initOutcome }}
           EXAMPLE_VALIDATE: ${{ needs.validate_gh_actions_example.outputs.validateOutcome }}
@@ -111,6 +147,18 @@ jobs:
 
             \`\`\`\n
             ${{ env.MODULE_VALIDATE_OUTPUT }}
+            \`\`\`
+
+            </details>
+            
+            ### Submodule - oidc-provider 
+            #### Terraform fmt 🖌\`${{ env.OIDC_FMT }}\`
+            #### Terraform init ⚙️\`${{ env.OIDC_INIT }}\`
+            #### Terraform validate 🤖\`${{ env.OIDC_VALIDATE }}\`
+            <details><summary>Validation Output</summary>
+
+            \`\`\`\n
+            ${{ env.OIDC_VALIDATE_OUTPUT }}
             \`\`\`
 
             </details>

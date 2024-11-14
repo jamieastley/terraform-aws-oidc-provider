@@ -1,0 +1,138 @@
+name: "Pull Request"
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  validate_main_module:
+    name: "Validate module"
+    runs-on: ubuntu-latest
+    outputs:
+      fmtOutput: ${{ steps.fmt.outcome }}
+      initOutput: ${{ steps.init.outcome }}
+      validateOutput: ${{ steps.validate.outcome}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ vars.TERRAFORM_VERSION }}
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+  validate_gh_actions_example:
+    name: "Validate GitHub Actions example"
+    working-directory: examples/github-actions
+    runs-on: ubuntu-latest
+    outputs:
+      fmtOutput: ${{ steps.fmt.outcome }}
+      initOutput: ${{ steps.init.outcome }}
+      validateOutput: ${{ steps.validate.outcome}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ vars.TERRAFORM_VERSION }}
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+  output_terraform_results:
+    name: "Output Terraform results"
+    runs-on: ubuntu-latest
+    needs: [ validate_main_module, validate_gh_actions_example ]
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          MODULE_FMT: ${{ needs.validate_main_module.outputs.fmtOutput }}
+          MODULE_INIT: ${{ needs.validate_main_module.outputs.initOutput }}
+          MODULE_VALIDATE: ${{ needs.validate_main_module.outputs.validateOutput }}
+          EXAMPLE_FMT: ${{ needs.validate_gh_actions_example.outputs.fmtOutput }}
+          EXAMPLE_INIT: ${{ needs.validate_gh_actions_example.outputs.initOutput }}
+          EXAMPLE_VALIDATE: ${{ needs.validate_gh_actions_example.outputs.validateOutput }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+            })
+
+            // 2. Prepare format of the comment
+            const output = `### Module
+            #### Terraform Format and Style 🖌\`$MODULE_FMT\`
+            #### Terraform Initialization ⚙️\`$MODULE_INIT\`
+            #### Terraform Validation 🤖\`$MODULE_VALIDATE\`
+            <details><summary>Validation Output</summary>
+
+            \`\`\`\n
+            ${{ MODULE_VALIDATE.stdout }}
+            \`\`\`
+
+            </details>
+            
+            ### Example - GitHub Actions 
+            #### Terraform Format and Style 🖌\`$EXAMPLE_FMT\`
+            #### Terraform Initialization ⚙️\`$EXAMPLE_INIT\`
+            #### Terraform Validation 🤖\`$EXAMPLE_VALIDATE\`
+            <details><summary>Validation Output</summary>
+
+            \`\`\`\n
+            ${{ EXAMPLE_VALIDATE.stdout }}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }

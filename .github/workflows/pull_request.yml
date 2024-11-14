@@ -102,7 +102,7 @@ jobs:
   output_terraform_results:
     name: "Output Terraform results"
     runs-on: ubuntu-latest
-    needs: [ validate_main_module, validate_gh_actions_example ]
+    needs: [ validate_main_module, validate_oidc_provider, validate_gh_actions_example ]
     permissions:
       pull-requests: write
       issues: write

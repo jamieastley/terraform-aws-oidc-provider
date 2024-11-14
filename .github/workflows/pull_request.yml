@@ -36,7 +36,9 @@ jobs:
 
   validate_gh_actions_example:
     name: "Validate GitHub Actions example"
-    working-directory: examples/github-actions
+    defaults:
+      run:
+        working-directory: examples/github-actions
     runs-on: ubuntu-latest
     outputs:
       fmtOutput: ${{ steps.fmt.outcome }}

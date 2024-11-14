@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: "terraform"
+    directories:
+      - "/"
+      - "/examples/github-actions"
+      - "/modules/oidc-provider"
+    reviewers:
+      - jamieastley
+    assignees:
+      - jamieastley
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Australia/Sydney"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    reviewers:
+      - jamieastley
+    assignees:
+      - jamieastley
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Australia/Sydney"

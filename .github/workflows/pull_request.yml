@@ -36,7 +36,7 @@ jobs:
         run: terraform validate -no-color
 
   validate_oidc_provider:
-    name: "Validate OIDC Provider module"
+    name: "Validate OIDC Provider submodule"
     defaults:
       run:
         working-directory: examples/github-actions

@@ -101,7 +101,7 @@ jobs:
 
             // 2. Prepare format of the comment
             const output = `### Module
-            #### Terraform Format and Style 🖌\`$MODULE_FMT\`
+            #### Terraform Format and Style 🖌\`${{ env.MODULE_FMT }}\`
             #### Terraform Initialization ⚙️\`$MODULE_INIT\`
             #### Terraform Validation 🤖\`$MODULE_VALIDATE\`
             <details><summary>Validation Output</summary>

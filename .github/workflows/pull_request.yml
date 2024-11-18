@@ -7,97 +7,24 @@ on:
 
 jobs:
   validate_main_module:
+    uses: ./.github/workflows/validate_module.yml
     name: "Validate module"
-    runs-on: ubuntu-latest
-    outputs:
-      fmtOutcome: ${{ steps.fmt.outcome }}
-      initOutcome: ${{ steps.init.outcome }}
-      validateOutcome: ${{ steps.validate.outcome}}
-      validateOutput: ${{ steps.validate.outputs.stdout}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ vars.TERRAFORM_VERSION }}
-
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
+    with:
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
 
   validate_oidc_provider:
+    uses: ./.github/workflows/validate_module.yml
     name: "Validate OIDC Provider submodule"
-    defaults:
-      run:
-        working-directory: modules/oidc-provider
-    runs-on: ubuntu-latest
-    outputs:
-      fmtOutcome: ${{ steps.fmt.outcome }}
-      initOutcome: ${{ steps.init.outcome }}
-      validateOutcome: ${{ steps.validate.outcome}}
-      validateOutput: ${{ steps.validate.outputs.stdout}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ vars.TERRAFORM_VERSION }}
-
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
+    with:
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      working-directory: modules/oidc-provider
 
   validate_gh_actions_example:
+    uses: ./.github/workflows/validate_module.yml
     name: "Validate GitHub Actions example"
-    defaults:
-      run:
-        working-directory: examples/github-actions
-    runs-on: ubuntu-latest
-    outputs:
-      fmtOutcome: ${{ steps.fmt.outcome }}
-      initOutcome: ${{ steps.init.outcome }}
-      validateOutcome: ${{ steps.validate.outcome}}
-      validateOutput: ${{ steps.validate.outputs.stdout}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ vars.TERRAFORM_VERSION }}
-
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
+    with:
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      working-directory: examples/github-actions
 
   output_terraform_results:
     name: "Output Terraform results"

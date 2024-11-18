@@ -16,11 +16,20 @@ on:
         required: false
         default: 'ubuntu-latest'
         type: string
+
     outputs:
-      fmtOutcome: ${{ jobs.validate.outputs.fmtOutcome }}
-      initOutcome: ${{ jobs.validate.outputs.initOutcome }}
-      validateOutcome: ${{ jobs.validate.outputs.validateOutcome }}
-      validateOutput: ${{ jobs.validate.outputs.validateOutput }}
+      fmtOutcome:
+        description: 'Outcome of terraform fmt -check'
+        value: ${{ jobs.validate.outputs.fmtOutcome }}
+      initOutcome:
+        description: 'Outcome of terraform init'
+        value: ${{ jobs.validate.outputs.initOutcome }}
+      validateOutcome:
+        description: 'Outcome of terraform validate'
+        value: ${{ jobs.validate.outputs.validateOutcome }}
+      validateOutput:
+        description: 'stdout of terraform validate'
+        value: ${{ jobs.validate.outputs.validateOutput }}
 
 jobs:
   validate:

@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.8"
+    }
+  }
+}
+
 resource "aws_iam_openid_connect_provider" "oidc_provider" {
   url = var.identity_provider_url
 

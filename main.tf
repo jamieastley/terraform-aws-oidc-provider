@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.8"
+    }
+  }
+}
+
 data "aws_iam_policy_document" "oidc_policy" {
   statement {
     effect  = "Allow"

@@ -1,0 +1,26 @@
+name: "Validate merge"
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  validate_main_module:
+    uses: ./.github/workflows/validate_module.yml
+    name: "Validate module"
+    with:
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+
+  validate_oidc_provider:
+    uses: ./.github/workflows/validate_module.yml
+    name: "Validate OIDC Provider submodule"
+    with:
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      working-directory: modules/oidc-provider
+
+  validate_gh_actions_example:
+    uses: ./.github/workflows/validate_module.yml
+    name: "Validate GitHub Actions example"
+    with:
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      working-directory: examples/github-actions

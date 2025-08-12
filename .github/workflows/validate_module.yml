@@ -44,7 +44,7 @@ jobs:
       validateOutput: ${{ steps.validate.outputs.stdout}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

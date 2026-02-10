@@ -10,9 +10,6 @@ terraform {
 locals {
   app_name                   = "example-github-actions"
   identity_provider_base_url = "https://token.actions.githubusercontent.com"
-  tags = {
-    app = local.app_name
-  }
 }
 
 data "tls_certificate" "github" {
@@ -23,7 +20,6 @@ module "oidc_provider" {
   source                        = "../../modules/oidc-provider"
   identity_provider_url         = local.identity_provider_base_url
   oidc_provider_thumbprint_list = [data.tls_certificate.github.certificates[0].sha1_fingerprint]
-  resource_tags                 = local.tags
 }
 
 module "oidc_policies" {
@@ -36,7 +32,6 @@ module "oidc_policies" {
   sub_claim_list = [
     "repo:jamieastley/terraform-aws-oidc-provider:*",
   ]
-  resource_tags = local.tags
 }
 
 # Define policy statements for GitHub Actions
@@ -53,7 +48,6 @@ resource "aws_iam_policy" "iam_policy" {
   name        = "${local.app_name}-s3-policy"
   description = "Allows full access to S3"
   policy      = data.aws_iam_policy_document.iam_role_policies.json
-  tags        = local.tags
 }
 
 # Attach the policy to the OIDC role

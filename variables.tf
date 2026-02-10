@@ -32,8 +32,3 @@ variable "iam_role_name" {
   description = "The name given to the IAM role which will be created"
   type        = string
 }
-
-variable "resource_tags" {
-  description = "A map of tags to add to the resources"
-  type        = map(string)
-}

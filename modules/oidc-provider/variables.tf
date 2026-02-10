@@ -15,8 +15,3 @@ variable "oidc_provider_thumbprint_list" {
   type        = list(string)
   default     = []
 }
-
-variable "resource_tags" {
-  description = "A map of tags to add to the resources"
-  type        = map(string)
-}

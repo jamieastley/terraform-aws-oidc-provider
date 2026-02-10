@@ -31,5 +31,4 @@ data "aws_iam_policy_document" "oidc_policy" {
 resource "aws_iam_role" "oidc_role" {
   name               = var.iam_role_name
   assume_role_policy = data.aws_iam_policy_document.oidc_policy.json
-  tags               = var.resource_tags
 }
